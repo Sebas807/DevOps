@@ -1,0 +1,35 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.env
+
+# Firebase
+serviceAccountKey.json
+firebase-debug.log
+firebase.json
+
+# Logs
+*.log
+logs
+debug.log
+*.out
+
+# Directorios específicos de VS Code
+.vscode/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+tmp/
+dist/
+build/
+
+# nodemon
+*.pid
+.nodemon-debug.json
+
+
+
