@@ -58,6 +58,19 @@ router.delete("/:leagueId", async (req, res) => {
     const leagueRef = db.collection("leagues").doc(leagueId);
     const leagueDoc = await leagueRef.get();
     const name = leagueDoc.data().name;
+    const teamsRef = leagueRef.collection("teams");
+    const teamsSnapshot = await teamsRef.get();
+    const batch = db.batch();
+    for (const teamDoc of teamsSnapshot.docs) {
+      const teamRef = teamsRef.doc(teamDoc.id);
+      const playersRef = teamRef.collection("players");
+      const playersSnapshot = await playersRef.get();
+      playersSnapshot.forEach((playerDoc) => {
+        batch.delete(playerDoc.ref); 
+      });
+      batch.delete(teamRef); 
+    }
+    await batch.commit();
     await db.collection("leagues").doc(leagueId).delete();
     res.status(200).json({
       message: "League eliminated",

@@ -22,14 +22,14 @@ router.get("/:leagueId/teams/:teamId/players", async (req, res) => {
 router.post("/:leagueId/teams/:teamId/players", async (req, res) => {
   try {
     const { leagueId, teamId } = req.params;
-    const { name } = req.body;
+    const { name, country } = req.body;
     const playerRef = await db
       .collection("leagues")
       .doc(leagueId)
       .collection("teams")
       .doc(teamId)
       .collection("players")
-      .add({ name });
+      .add({ name, country });
     res.status(201).json({ id: playerRef.id, name });
   } catch (error) {
     res.status(500).json({ error: error.message });

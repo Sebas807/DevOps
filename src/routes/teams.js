@@ -20,13 +20,83 @@ router.get("/:leagueId/teams", async (req, res) => {
 router.post("/:leagueId/teams", async (req, res) => {
   try {
     const { leagueId } = req.params;
-    const { name } = req.body;
+    const { name, stadium } = req.body;
     const teamRef = await db
       .collection("leagues")
       .doc(leagueId)
       .collection("teams")
-      .add({ name });
-    res.status(201).json({ id: teamRef.id, name });
+      .add({ name, stadium });
+    res.status(201).json({ id: teamRef.id, name, stadium });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.put("/:leagueId/teams/:teamId", async (req, res) => {
+  try {
+    const { leagueId, teamId } = req.params;
+    const { name, stadium } = req.body;
+    const teamRef = db
+      .collection("leagues")
+      .doc(leagueId)
+      .collection("teams")
+      .doc(teamId);
+    await teamRef.update({ name, stadium });
+    res.status(200).json({ id: teamRef.id, name, stadium });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.patch("/:leagueId/teams/:teamId", async (req, res) => {
+  try {
+    const { leagueId, teamId } = req.params;
+    const data = req.body;
+    const teamRef = db
+      .collection("leagues")
+      .doc(leagueId)
+      .collection("teams")
+      .doc(teamId);
+    await teamRef.update(data);
+    const teamUpdated = (await teamRef.get()).data();
+    res.status(200).json({
+      message: "Team updated",
+      teamId: teamId,
+      updatedFields: data,
+      newData: teamUpdated,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.delete("/:leagueId/teams/:teamId", async (req, res) => {
+  try {
+    const { leagueId, teamId } = req.params;
+    const teamRef = db
+      .collection("leagues")
+      .doc(leagueId)
+      .collection("teams")
+      .doc(teamId);
+    const playersRef = teamRef.collection("players");
+    const playersSnapshot = await playersRef.get();
+    const batch = db.batch();
+    playersSnapshot.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+    await batch.commit();
+    const teamDoc = await teamRef.get();
+    const name = teamDoc.data().name;
+    await db
+      .collection("leagues")
+      .doc(leagueId)
+      .collection("teams")
+      .doc(teamId)
+      .delete();
+    res.status(200).json({
+      message: "Team eliminated",
+      league: { id: teamId, teamName: name },
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
