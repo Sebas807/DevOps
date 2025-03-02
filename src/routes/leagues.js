@@ -22,4 +22,50 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.put("/:leagueId", async (req, res) => {
+  try {
+    const { leagueId } = req.params;
+    const { name, country } = req.body;
+    const leagueRef = db.collection("leagues").doc(leagueId);
+    await leagueRef.update({ name, country });
+    res.status(200).json({ id: leagueRef.id, name, country });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.patch("/:leagueId", async (req, res) => {
+  try {
+    const { leagueId } = req.params;
+    const data = req.body;
+    const leagueRef = db.collection("leagues").doc(leagueId);
+    await leagueRef.update(data);
+    const leagueUpdated = (await leagueRef.get()).data();
+    res.status(200).json({
+      message: "League updated",
+      leagueId: leagueId,
+      updatedFields: data,
+      newData: leagueUpdated,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.delete("/:leagueId", async (req, res) => {
+  try {
+    const { leagueId } = req.params;
+    const leagueRef = db.collection("leagues").doc(leagueId);
+    const leagueDoc = await leagueRef.get();
+    const name = leagueDoc.data().name;
+    await db.collection("leagues").doc(leagueId).delete();
+    res.status(200).json({
+      message: "League eliminated",
+      league: { id: leagueId, leagueName: name },
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;
