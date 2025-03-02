@@ -78,6 +78,8 @@ router.delete("/:leagueId/teams/:teamId", async (req, res) => {
       .doc(leagueId)
       .collection("teams")
       .doc(teamId);
+    const teamDoc = await teamRef.get();
+    const name = teamDoc.data().name;
     const playersRef = teamRef.collection("players");
     const playersSnapshot = await playersRef.get();
     const batch = db.batch();
@@ -85,8 +87,6 @@ router.delete("/:leagueId/teams/:teamId", async (req, res) => {
       batch.delete(doc.ref);
     });
     await batch.commit();
-    const teamDoc = await teamRef.get();
-    const name = teamDoc.data().name;
     await db
       .collection("leagues")
       .doc(leagueId)
@@ -95,7 +95,7 @@ router.delete("/:leagueId/teams/:teamId", async (req, res) => {
       .delete();
     res.status(200).json({
       message: "Team eliminated",
-      league: { id: teamId, teamName: name },
+      team: { id: teamId, teamName: name },
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
