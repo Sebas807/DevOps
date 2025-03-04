@@ -11,6 +11,7 @@ describe("League Routes", () => {
     jest.clearAllMocks();
   });
 
+  // Prueba de Get
   test("GET /leagues should return a list of leagues", async () => {
     const mockSnapshot = {
       docs: [
@@ -18,11 +19,9 @@ describe("League Routes", () => {
         { id: "2", data: () => ({ name: "La Liga", country: "Spain" }) },
       ],
     };
-
     db.collection.mockReturnValue({
       get: jest.fn().mockResolvedValue(mockSnapshot),
     });
-
     const response = await request(app).get("/api/leagues");
     expect(response.status).toBe(200);
     expect(response.body).toEqual([
@@ -31,18 +30,18 @@ describe("League Routes", () => {
     ]);
   });
 
+  // Prueba de Post
   test("POST /leagues should create a league", async () => {
     db.collection.mockReturnValue({
       add: jest.fn().mockResolvedValue({ id: "123" }),
     });
-
     const newLeague = { name: "Serie A", country: "Italy" };
     const response = await request(app).post("/api/leagues").send(newLeague);
-
     expect(response.status).toBe(201);
     expect(response.body).toEqual({ id: "123", name: "Serie A" });
   });
 
+  // Prueba de Put 
   test("PUT /leagues/:leagueId should update a league", async () => {
     db.collection.mockReturnValue({
       doc: jest.fn().mockReturnValue({
@@ -50,16 +49,15 @@ describe("League Routes", () => {
         id: "123",
       }),
     });
-
     const updatedLeague = { name: "Bundesliga", country: "Germany" };
     const response = await request(app)
       .put("/api/leagues/123")
       .send(updatedLeague);
-
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ id: "123", ...updatedLeague });
   });
 
+  // Prueba de Patch
   test("PATCH /api/leagues/:leagueId should partially update a league", async () => {
     db.collection.mockReturnValue({
       doc: jest.fn().mockReturnValue({
@@ -92,12 +90,12 @@ describe("League Routes", () => {
     expect(db.collection().doc().update).toHaveBeenCalledWith(partialUpdate);
   });
 
+  // Prueba de Delete
   test("DELETE /leagues/:leagueId should delete a league", async () => {
     const mockBatch = {
       delete: jest.fn(),
       commit: jest.fn().mockResolvedValue(),
     };
-
     db.collection.mockReturnValue({
       doc: jest.fn().mockReturnValue({
         get: jest.fn().mockResolvedValue({
