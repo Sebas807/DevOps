@@ -31,5 +31,8 @@ build/
 *.pid
 .nodemon-debug.json
 
+# Pruebas
+coverage/
+
 
 
