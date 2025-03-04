@@ -79,6 +79,9 @@ router.delete("/:leagueId/teams/:teamId", async (req, res) => {
       .collection("teams")
       .doc(teamId);
     const teamDoc = await teamRef.get();
+    if (!teamDoc.exists) {
+      return res.status(404).json({ message: "Team not found" });
+    }
     const name = teamDoc.data().name;
     const playersRef = teamRef.collection("players");
     const playersSnapshot = await playersRef.get();

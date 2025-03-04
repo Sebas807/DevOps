@@ -91,6 +91,9 @@ router.delete(
         .collection("players")
         .doc(playerId);
       const playerDoc = await playerRef.get();
+      if (!playerDoc.exists) {
+        return res.status(404).json({ message: "Player not found" });
+      }
       const name = playerDoc.data().name;
       await db
         .collection("leagues")

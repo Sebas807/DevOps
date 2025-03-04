@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../firebase-admin");
 
+// Método Get 
 router.get("/", async (req, res) => {
   try {
     const snapshot = await db.collection("leagues").get();
@@ -12,6 +13,8 @@ router.get("/", async (req, res) => {
   }
 });
 
+
+// Método Post
 router.post("/", async (req, res) => {
   try {
     const { name, country } = req.body;
@@ -22,6 +25,8 @@ router.post("/", async (req, res) => {
   }
 });
 
+
+// Método Put 
 router.put("/:leagueId", async (req, res) => {
   try {
     const { leagueId } = req.params;
@@ -34,6 +39,7 @@ router.put("/:leagueId", async (req, res) => {
   }
 });
 
+// Método Patch
 router.patch("/:leagueId", async (req, res) => {
   try {
     const { leagueId } = req.params;
@@ -52,11 +58,15 @@ router.patch("/:leagueId", async (req, res) => {
   }
 });
 
+// Método Delete
 router.delete("/:leagueId", async (req, res) => {
   try {
     const { leagueId } = req.params;
     const leagueRef = db.collection("leagues").doc(leagueId);
     const leagueDoc = await leagueRef.get();
+    if (!leagueDoc.exists) {
+      return res.status(404).json({ message: "League not found" });
+    }
     const name = leagueDoc.data().name;
     const teamsRef = leagueRef.collection("teams");
     const teamsSnapshot = await teamsRef.get();
