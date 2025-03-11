@@ -32,9 +32,13 @@ jobs:
       
       - name: Check test coverage
         run: |
-          COVERAGE=$(npm run test:coverage --silent | grep 'All files' | awk '{print substr($5, 1, length($5)-1)}')
+          COVERAGE=$(npm run test:coverage --silent | grep 'All files' | awk '{print $3}' | tr -d '%')
+          echo "Coverage: $COVERAGE%"
           if (( $(echo "$COVERAGE < 60" | bc -l) )); then
-            echo "Test coverage below 60%!"
+            echo "Test coverage below 60%"
             exit 1
+          else
+            echo "Test coverage is sufficient"
           fi
+      
       
