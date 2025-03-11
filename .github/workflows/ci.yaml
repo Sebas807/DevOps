@@ -12,6 +12,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+        FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY_TEST }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
