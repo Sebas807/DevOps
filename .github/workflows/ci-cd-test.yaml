@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline - Testing
 
 on:
   push:
@@ -40,5 +40,4 @@ jobs:
           else
             echo "Test coverage is sufficient"
           fi
-      
       

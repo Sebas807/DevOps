@@ -1,0 +1,42 @@
+name: CI/CD Pipeline - Production
+
+on:
+  push:
+    branches:
+      - seguimiento-1
+  pull_request:
+    branches:
+      - seguimiento-1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+        FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY_PROD }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+      
+      - name: Check test coverage
+        run: |
+          COVERAGE=$(npm run test:coverage --silent | grep -E 'All files\s*\|\s*[0-9]' | awk '{print $4}' | tr -d '%')
+          echo "Coverage: $COVERAGE%"
+          if (( $(echo "$COVERAGE < 85" | bc -l) )); then
+            echo "Test coverage below 85%"
+            exit 1
+          else
+            echo "Test coverage is sufficient"
+          fi
