@@ -19,7 +19,7 @@ app.use("/api/leagues", leaguesRoutes);
 app.use("/api/leagues", playersRoutes);
 
 app.get("/", (req, res) => {
-  res.send("¡Bienvenido a la API de fútbol!");
+  res.send("¡Bienvenido a la API Rest de fútbol!");
 });
 
 if (process.env.NODE_ENV !== "test") {
