@@ -44,5 +44,5 @@ jobs:
       - name: Deploy to Vercel (testing)
         run: |
           npm i -g vercel
-          vercel --token ${{ secrets.VERCEL_TOKEN_TEST }} --confirm --cwd .
+          vercel --token ${{ secrets.VERCEL_TOKEN_TEST }} --name football-api-testing --yes
       
