@@ -9,9 +9,18 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
 app.use("/api/leagues", teamsRoutes);
 app.use("/api/leagues", leaguesRoutes);
 app.use("/api/leagues", playersRoutes);
+
+app.get("/", (req, res) => {
+  res.send("¡Bienvenido a la API de fútbol!");
+});
 
 if (process.env.NODE_ENV !== "test") {
   const PORT = process.env.PORT || 3000;
