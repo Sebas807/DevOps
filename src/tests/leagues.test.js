@@ -22,7 +22,7 @@ describe("League Routes", () => {
     db.collection.mockReturnValue({
       get: jest.fn().mockResolvedValue(mockSnapshot),
     });
-    const response = await request(app).get("/api");
+    const response = await request(app).get("/api/leagues");
     expect(response.status).toBe(200);
     expect(response.body).toEqual([
       { id: "1", name: "Premier League", country: "UK" },
