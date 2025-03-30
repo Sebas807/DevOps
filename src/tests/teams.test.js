@@ -32,7 +32,7 @@ describe("Team Routes", () => {
         }),
       }),
     });
-    const response = await request(app).get("/api/leagues/123/teams");
+    const response = await request(app).get("/api/v2/leagues/123/teams");
     expect(response.status).toBe(200);
     expect(response.body).toEqual([
       { id: "1", name: "Manchester United", stadium: "Old Trafford" },
@@ -51,7 +51,7 @@ describe("Team Routes", () => {
     });
     const newTeam = { name: "Juventus", stadium: "Allianz Stadium" };
     const response = await request(app)
-      .post("/api/leagues/123/teams")
+      .post("/api/v2/leagues/123/teams")
       .send(newTeam);
     expect(response.status).toBe(201);
     expect(response.body).toEqual({ id: "456", ...newTeam });
@@ -71,7 +71,7 @@ describe("Team Routes", () => {
     });
     const updatedTeam = { name: "AC Milan", stadium: "San Siro" };
     const response = await request(app)
-      .put("/api/leagues/123/teams/456")
+      .put("/api/v2/leagues/123/teams/456")
       .send(updatedTeam);
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ id: "456", ...updatedTeam });
@@ -94,7 +94,7 @@ describe("Team Routes", () => {
     });
     const partialUpdate = { stadium: "Juventus Stadium" };
     const response = await request(app)
-      .patch("/api/leagues/123/teams/456")
+      .patch("/api/v2/leagues/123/teams/456")
       .send(partialUpdate);
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
@@ -140,7 +140,7 @@ describe("Team Routes", () => {
       throw new Error("Unexpected collection");
     });
     db.batch = jest.fn().mockReturnValue(mockBatch);
-    const response = await request(app).delete("/api/leagues/123/teams/456");
+    const response = await request(app).delete("/api/v2/leagues/123/teams/456");
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       message: "Team eliminated",

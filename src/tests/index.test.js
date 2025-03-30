@@ -5,19 +5,19 @@ describe("Index.js routes", () => {
 
   // Probando rutas de equipos
   it("should load teams routes", async () => {
-    const response = await request(app).get("/api/leagues/:leagueId/teams");
+    const response = await request(app).get("/api/v2/leagues/:leagueId/teams");
     expect(response.status).not.toBe(404); 
   });
 
   // Probando ruta de ligas
   it("should load leagues routes", async () => {
-    const response = await request(app).get("/api/leagues");
+    const response = await request(app).get("/api/v2/leagues");
     expect(response.status).not.toBe(404);
   });
 
   // Probando ruta de jugadores
   it("should load players routes", async () => {
-    const response = await request(app).get("/api/leagues/:leagueId/teams/:teamId/players");
+    const response = await request(app).get("/api/v2/leagues/:leagueId/teams/:teamId/players");
     expect(response.status).not.toBe(404);
   });
 });

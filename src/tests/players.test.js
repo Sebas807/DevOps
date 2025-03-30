@@ -30,7 +30,7 @@ describe("Player Routes", () => {
         }),
       }),
     });
-    const response = await request(app).get("/api/leagues/123/teams/456/players");
+    const response = await request(app).get("/api/v2/leagues/123/teams/456/players");
     expect(response.status).toBe(200);
     expect(response.body).toEqual([
       { id: "1", name: "Lionel Messi", country: "Argentina" },
@@ -53,7 +53,7 @@ describe("Player Routes", () => {
     });
     const newPlayer = { name: "Kylian Mbappé", country: "France" };
     const response = await request(app)
-      .post("/api/leagues/123/teams/456/players")
+      .post("/api/v2/leagues/123/teams/456/players")
       .send(newPlayer);
     expect(response.status).toBe(201);
     expect(response.body).toEqual({ id: "789", name: newPlayer.name });
@@ -77,7 +77,7 @@ describe("Player Routes", () => {
     });
     const updatedPlayer = { name: "Neymar Jr.", country: "Brazil" };
     const response = await request(app)
-      .put("/api/leagues/123/teams/456/players/789")
+      .put("/api/v2/leagues/123/teams/456/players/789")
       .send(updatedPlayer);
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ id: "789", ...updatedPlayer });
@@ -104,7 +104,7 @@ describe("Player Routes", () => {
     });
     const partialUpdate = { country: "Germany" };
     const response = await request(app)
-      .patch("/api/leagues/123/teams/456/players/789")
+      .patch("/api/v2/leagues/123/teams/456/players/789")
       .send(partialUpdate);
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
@@ -135,7 +135,7 @@ describe("Player Routes", () => {
         }),
       }),
     });
-    const response = await request(app).delete("/api/leagues/123/teams/456/players/789");
+    const response = await request(app).delete("/api/v2/leagues/123/teams/456/players/789");
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       message: "Player eliminated",

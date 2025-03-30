@@ -14,9 +14,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/leagues", teamsRoutes);
-app.use("/api/leagues", leaguesRoutes);
-app.use("/api/leagues", playersRoutes);
+app.use("/api/v2/leagues", teamsRoutes);
+app.use("/api/v2/leagues", leaguesRoutes);
+app.use("/api/v2/leagues", playersRoutes);
 
 app.get("/", (req, res) => {
   res.send("¡Bienvenido a la API Rest de fútbol!");

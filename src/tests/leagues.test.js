@@ -22,7 +22,7 @@ describe("League Routes", () => {
     db.collection.mockReturnValue({
       get: jest.fn().mockResolvedValue(mockSnapshot),
     });
-    const response = await request(app).get("/api/leagues");
+    const response = await request(app).get("/api/v2/leagues");
     expect(response.status).toBe(200);
     expect(response.body).toEqual([
       { id: "1", name: "Premier League", country: "UK" },
@@ -36,7 +36,7 @@ describe("League Routes", () => {
       add: jest.fn().mockResolvedValue({ id: "123" }),
     });
     const newLeague = { name: "Serie A", country: "Italy" };
-    const response = await request(app).post("/api/leagues").send(newLeague);
+    const response = await request(app).post("/api/v2/leagues").send(newLeague);
     expect(response.status).toBe(201);
     expect(response.body).toEqual({ id: "123", name: "Serie A" });
   });
@@ -51,7 +51,7 @@ describe("League Routes", () => {
     });
     const updatedLeague = { name: "Bundesliga", country: "Germany" };
     const response = await request(app)
-      .put("/api/leagues/123")
+      .put("/api/v2/leagues/123")
       .send(updatedLeague);
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ id: "123", ...updatedLeague });
@@ -73,7 +73,7 @@ describe("League Routes", () => {
     });
     const partialUpdate = { country: "Spain" };
     const response = await request(app)
-      .patch("/api/leagues/123")
+      .patch("/api/v2/leagues/123")
       .send(partialUpdate);
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
@@ -109,7 +109,7 @@ describe("League Routes", () => {
       }),
     });
     db.batch = jest.fn().mockReturnValue(mockBatch);
-    const response = await request(app).delete("/api/leagues/123");
+    const response = await request(app).delete("/api/v2/leagues/123");
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       message: "League eliminated",
@@ -126,7 +126,7 @@ describe("League Routes", () => {
     db.collection.mockReturnValue({
       get: jest.fn().mockRejectedValue(new Error("Database error")),
     });
-    const response = await request(app).get("/api/leagues");
+    const response = await request(app).get("/api/v2/leagues");
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: "Database error" });
   });
@@ -137,7 +137,7 @@ describe("League Routes", () => {
       add: jest.fn().mockRejectedValue(new Error("Database error")),
     });
     const newLeague = { name: "Serie A", country: "Italy" };
-    const response = await request(app).post("/api/leagues").send(newLeague);
+    const response = await request(app).post("/api/v2/leagues").send(newLeague);
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: "Database error" });
   });
@@ -151,7 +151,7 @@ describe("League Routes", () => {
     });
     const updatedLeague = { name: "Bundesliga", country: "Germany" };
     const response = await request(app)
-      .put("/api/leagues/123")
+      .put("/api/v2/leagues/123")
       .send(updatedLeague);
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: "Database error" });
@@ -167,7 +167,7 @@ describe("League Routes", () => {
     });
     const partialUpdate = { country: "Spain" };
     const response = await request(app)
-      .patch("/api/leagues/123")
+      .patch("/api/v2/leagues/123")
       .send(partialUpdate);
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: "Database error" });
@@ -188,7 +188,7 @@ describe("League Routes", () => {
         }),
       }),
     });
-    const response = await request(app).delete("/api/leagues/123");
+    const response = await request(app).delete("/api/v2/leagues/123");
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: "Database error" });
   });
@@ -199,7 +199,7 @@ describe("League Routes", () => {
       get: jest.fn().mockRejectedValue(new Error("DB Error")),
     });
   
-    const response = await request(app).get("/api/leagues");
+    const response = await request(app).get("/api/v2/leagues");
   
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: "DB Error" });
@@ -212,7 +212,7 @@ describe("League Routes", () => {
     });
   
     const newLeague = { name: "Serie A" }; // Falta el país
-    const response = await request(app).post("/api/leagues").send(newLeague);
+    const response = await request(app).post("/api/v2/leagues").send(newLeague);
   
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: "Failed to add league" });
@@ -228,7 +228,7 @@ describe("League Routes", () => {
   
     const updatedLeague = { name: "Bundesliga", country: "Germany" };
     const response = await request(app)
-      .put("/api/leagues/123")
+      .put("/api/v2/leagues/123")
       .send(updatedLeague);
   
     expect(response.status).toBe(500);
@@ -243,7 +243,7 @@ describe("League Routes", () => {
       }),
     });
   
-    const response = await request(app).delete("/api/leagues/123");
+    const response = await request(app).delete("/api/v2/leagues/123");
   
     expect(response.status).toBe(404);
     expect(response.body).toEqual({ message: "League not found" });

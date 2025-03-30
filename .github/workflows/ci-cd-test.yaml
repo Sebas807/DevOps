@@ -3,10 +3,10 @@ name: CI/CD Pipeline - Testing
 on:
   push:
     branches:
-      - seguimiento-1
+      - seguimiento-2
   pull_request:
     branches:
-      - seguimiento-1
+      - seguimiento-2
 
 jobs:
   test:
