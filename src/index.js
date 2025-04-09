@@ -3,6 +3,8 @@ const dotenv = require("dotenv");
 const teamsRoutes = require("./routes/teams");
 const leaguesRoutes = require("./routes/leagues");
 const playersRoutes = require("./routes/players");
+const microserviceRoutes = require("./routes/microservice");
+const healthRoutes = require("./routes/health");
 
 dotenv.config();
 
@@ -17,6 +19,8 @@ app.use((req, res, next) => {
 app.use("/api/v2/leagues", teamsRoutes);
 app.use("/api/v2/leagues", leaguesRoutes);
 app.use("/api/v2/leagues", playersRoutes);
+app.use("/api/v2/microservice", microserviceRoutes);
+app.use("/api/v2/health", healthRoutes);
 
 app.get("/", (req, res) => {
   res.send("¡Bienvenido a la API Rest de fútbol!");
