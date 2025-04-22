@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 const { ServiceBusClient } = require("@azure/service-bus");
 const axios = require("axios");
-const db = require("../firebase-admin");
+const db = require("./firebase-admin");
 
 dotenv.config();
 
