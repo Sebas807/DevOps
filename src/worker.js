@@ -65,10 +65,6 @@ const start = async () => {
 
       const message = JSON.parse(msg.body.message); 
 
-      if (message.failOn === "3") {
-        throw new Error("Fallo intencional en el Paso 3");
-      }
-
       try {
         const leagues = await fetchFullData();
 
