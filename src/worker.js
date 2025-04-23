@@ -64,12 +64,6 @@ const start = async () => {
       console.log("Mensaje recibido:", msg.body);
 
       const message = JSON.parse(msg.body.message); 
-      const sendTo = message.sendTo;
-
-      if (sendTo !== "microservice3") {
-        console.log("Mensaje no dirigido a este microservicio 3. Ignorado.");
-        return;
-      }
 
       if (message.failOn === "3") {
         throw new Error("Fallo intencional en el Paso 3");
