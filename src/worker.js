@@ -63,7 +63,7 @@ const start = async () => {
     async processMessage(msg) {
       console.log("Mensaje recibido:", msg.body);
 
-      const message = JSON.parse(msg.body.message); 
+      const message = msg.body;
 
       try {
         const leagues = await fetchFullData();
@@ -71,20 +71,20 @@ const start = async () => {
         message.data = {
           step3: {
             timestamp: new Date().toISOString(),
-            leagues
-          }
+            leagues,
+          },
         };
 
         const enrichedMsg = {
-          message: JSON.stringify(message)
+          message: JSON.stringify(message),
         };
 
         const res = await axios.post(postUrl, enrichedMsg, {
           headers: {
             "Content-Type": "application/json",
             "X-Source": "microservice3",
-            "X-Destination": "queue-ms"
-          }
+            "X-Destination": "queue-ms",
+          },
         });
 
         console.log("Mensaje enriquecido y reenviado con éxito:", res.status);
@@ -95,7 +95,7 @@ const start = async () => {
 
     async processError(err) {
       console.error("Error en el worker:", err);
-    }
+    },
   });
 };
 
