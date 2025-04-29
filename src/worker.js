@@ -68,6 +68,8 @@ const start = async () => {
       try {
         const leagues = await fetchFullData();
 
+        message.sendTo = "coordinator";
+
         message.data = {
           step3: {
             timestamp: new Date().toISOString(),
