@@ -14,10 +14,7 @@ const sbClient = new ServiceBusClient(connectionStr);
 const receiver = sbClient.createReceiver(topicName, subscriptionName);
 
 // Conexión reprocesados 1-3
-const connectionStr_rep = process.env.AZURE_SERVICE_BUS_CONNECTION_STRING;
-const queueNameRep = process.env.AZURE_SERVICE_BUS_QUEUE_NAME;
-const sbClient_rep = new ServiceBusClient(connectionStr_rep);
-const senderRep = sbClient_rep.createSender(queueNameRep);
+const postUrl_rep = process.env.POST_URL_REP;
 
 const fetchFullData = async () => {
   const leaguesSnap = await db.collection("leagues").get();
@@ -79,12 +76,19 @@ const start = async () => {
             "Fallo intencional detectado, reenviando a cola de reprocesados 1-3"
           );
 
-          await senderRep.sendMessages({
-            body: {
-              message: JSON.stringify(message),
+          const enrichedErrorMsg = {
+            message: JSON.stringify(message),
+          };
+
+          const errorRes = await axios.post(postUrl_rep, enrichedErrorMsg, {
+            headers: {
+              "Content-Type": "application/json",
+              "X-Source": "microservice3",
+              "X-Destination": "queue-reprocessed",
             },
           });
-          console.log("Mensaje enviado a cola de reprocesados con éxito.");
+          
+          console.log("Mensaje con error enviado a cola de reprocesados con éxito: ", errorRes.status);
 
           return;
         }
