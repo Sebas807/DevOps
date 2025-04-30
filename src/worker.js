@@ -5,12 +5,19 @@ const db = require("./firebase-admin");
 
 dotenv.config();
 
+// Conexión procesados 1-3
 const connectionStr = process.env.CONNECTION_STR;
 const topicName = process.env.TOPIC_NAME;
 const subscriptionName = process.env.SUBSCRIPTION_NAME;
 const postUrl = process.env.POST_URL;
 const sbClient = new ServiceBusClient(connectionStr);
 const receiver = sbClient.createReceiver(topicName, subscriptionName);
+
+// Conexión reprocesados 1-3
+const connectionStr_rep = process.env.AZURE_SERVICE_BUS_CONNECTION_STRING;
+const queueNameRep = process.env.AZURE_SERVICE_BUS_QUEUE_NAME;
+const sbClient_rep = new ServiceBusClient(connectionStr_rep);
+const senderRep = sbClient_rep.createSender(queueNameRep);
 
 const fetchFullData = async () => {
   const leaguesSnap = await db.collection("leagues").get();
@@ -66,6 +73,21 @@ const start = async () => {
       const message = msg.body;
 
       try {
+        if (message.failOn === "microservice3") {
+          message.error = "Fallo intencional en microservicio 3";
+          console.log(
+            "Fallo intencional detectado, reenviando a cola de reprocesados 1-3"
+          );
+
+          await senderRep.sendMessages({
+            body: {
+              message: JSON.stringify(message),
+            },
+          });
+          console.log("Mensaje enviado a cola de reprocesados con éxito.");
+
+          return;
+        }
         const leagues = await fetchFullData();
 
         message.sendTo = "coordinator";
